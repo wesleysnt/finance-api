@@ -1,28 +1,27 @@
 # go-base
 
-go-base is my own personal base code to start a new back end server project
+go-base is my own personal base code to start a new back end server project, feel free to use it if you find this base code helpful 😄
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
 ```bash
-pip install foobar
+go mod tidy
 ```
 
 ## Usage
 
-```python
-import foobar
+```bash
 
-# returns 'words'
-foobar.pluralize('word')
+# migration guide
 
-# returns 'geese'
-foobar.pluralize('goose')
+go run cmd/main gobase make:migration <file_name> #to make migration file (use create_table_name_table or update_table_name_table to automatically generate sql)
+go run cmd/main gobase migrate #run all the up file of the migration you made
+go run cmd/main gobase migrate:reset #to reset migration or to run all the down fil of the migration file you made
+go run cmd/main gobase migrate:refresh #to refresh database (run rollback, then migrate database again)
+go run cmd/main gobase migrate:rollback <step> #to rollback migration or to run the down file of migration file according to the number of step inserted
+go run cmd/main gobase migrate:status #to check the migration status
 
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+
 ```
 
 ## Library used
@@ -31,6 +30,7 @@ foobar.singularize('phenomena')
 - Echo: https://echo.labstack.com/
 - Viper: https://github.com/spf13/viper
 - Cobra: https://github.com/spf13/cobra
+- migrate: https://github.com/golang-migrate/migrate/v4
 
 ## Contributing
 
@@ -40,5 +40,3 @@ to discuss what you would like to change.
 Please make sure to update tests as appropriate.
 
 ## License
-
-[MIT](https://choosealicense.com/licenses/mit/)

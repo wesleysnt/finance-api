@@ -1,0 +1,7 @@
+database:
+  database: gobase
+  driver: postgres
+  host: localhost
+  username: postgres
+  password: password
+  port: 5432
