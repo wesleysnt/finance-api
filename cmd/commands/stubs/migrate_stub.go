@@ -8,12 +8,12 @@ type PostgresqlStubs struct {
 // CreateUp Create up migration content.
 func (receiver PostgresqlStubs) CreateUp(fileName, table string) string {
 	return fmt.Sprintf(`CREATE TABLE %v (
-  id SERIAL PRIMARY KEY NOT NULL,
-  created_at timestamp NOT NULL,
-  updated_at timestamp NOT NULL,
-  deleted_at timestamp NULL
-);
-`, table)
+	id SERIAL PRIMARY KEY NOT NULL,
+	created_at timestamp NOT NULL,
+	updated_at timestamp NOT NULL,
+	deleted_at timestamp NULL
+	);
+	`, table)
 }
 
 // CreateDown Create down migration content.

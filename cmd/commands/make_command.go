@@ -33,6 +33,11 @@ var makeMigrationCmd = &cobra.Command{
 	},
 }
 
+func init() {
+	gobaseCommand.AddCommand(makeMigrationCmd)
+}
+
+// make migration
 func CreateUp(fileName, time, table, mType string, stub bool) {
 
 	fileName1 := fmt.Sprintf("database/migrations/%v_%v.up.sql", time, fileName)
@@ -68,10 +73,6 @@ func CreateUp(fileName, time, table, mType string, stub bool) {
 		color.Redln(err.Error())
 		return
 	}
-}
-
-func init() {
-	gobaseCommand.AddCommand(makeMigrationCmd)
 }
 
 func CreateDown(fileName, time, table, mType string, stub bool) {
