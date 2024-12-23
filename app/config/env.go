@@ -6,6 +6,7 @@ import (
 
 type Env struct {
 	Database Database `mapstructure:"database"`
+	Server   Server   `mapstructure:"server"`
 }
 type Database struct {
 	Driver   string `mapstructure:"driver"`
@@ -14,6 +15,10 @@ type Database struct {
 	Database string `mapstructure:"database"`
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+}
+type Server struct {
+	Port string `mapstructure:"port"`
+	Host string `mapstructure:"host"`
 }
 
 func GetEnv() *Env {
