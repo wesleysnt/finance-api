@@ -8,7 +8,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
-	"github.com/wesleysnt/go-base/app/config"
+	"github.com/wesleysnt/finance-api/app/config"
 )
 
 var migrateCommand = &cobra.Command{
@@ -43,13 +43,18 @@ var migrateRefreshCmd = &cobra.Command{
 		m, err := getMigrate()
 
 		if err != nil {
-			color.Redf("error drop: %v \n", err)
+			color.Redf("error get migrate: %v \n", err)
 			return
 		}
 
-		err = m.Down()
+		err = m.Drop()
 		if err != nil {
 			color.Redf("error drop: %v \n", err)
+			return
+		}
+		m, err = getMigrate()
+		if err != nil {
+			color.Redf("error get migrate: %v \n", err)
 			return
 		}
 

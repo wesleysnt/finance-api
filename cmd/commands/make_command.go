@@ -8,7 +8,7 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
-	"github.com/wesleysnt/go-base/cmd/commands/stubs"
+	"github.com/wesleysnt/finance-api/cmd/commands/stubs"
 )
 
 var makeMigrationCmd = &cobra.Command{

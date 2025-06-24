@@ -1,6 +1,6 @@
-module github.com/wesleysnt/go-base
+module github.com/wesleysnt/finance-api
 
-go 1.22.7
+go 1.24.4
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
@@ -8,6 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.2
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
+	github.com/wesleysnt/finance-api v0.0.0-20250305062033-61e985a2a895
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )

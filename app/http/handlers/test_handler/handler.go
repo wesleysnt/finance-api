@@ -2,8 +2,8 @@ package testhandler
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/wesleysnt/go-base/app/helpers"
-	"github.com/wesleysnt/go-base/app/schemas"
+	"github.com/wesleysnt/finance-api/app/helpers"
+	"github.com/wesleysnt/finance-api/app/schemas"
 )
 
 type TestHandler struct {

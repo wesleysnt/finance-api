@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"github.com/labstack/echo/v4"
-	"github.com/wesleysnt/go-base/app/config"
-	"github.com/wesleysnt/go-base/app/helpers"
-	"github.com/wesleysnt/go-base/app/routes"
-	"github.com/wesleysnt/go-base/cmd/commands"
+	"github.com/wesleysnt/finance-api/app/config"
+	"github.com/wesleysnt/finance-api/app/helpers"
+	"github.com/wesleysnt/finance-api/app/routes"
+	"github.com/wesleysnt/finance-api/cmd/commands"
 )
 
 func main() {

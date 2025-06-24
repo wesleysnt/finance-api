@@ -3,7 +3,7 @@ package commands
 import (
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
-	"github.com/wesleysnt/go-base/database/seeders"
+	"github.com/wesleysnt/finance-api/database/seeders"
 )
 
 var seederRunCmd = &cobra.Command{

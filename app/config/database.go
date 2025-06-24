@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/wesleysnt/go-base/app/facades"
+	"github.com/wesleysnt/finance-api/app/facades"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

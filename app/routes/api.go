@@ -2,8 +2,8 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	testhandler "github.com/wesleysnt/go-base/app/http/handlers/test_handler"
-	"github.com/wesleysnt/go-base/pkg"
+	testhandler "github.com/wesleysnt/finance-api/app/http/handlers/test_handler"
+	"github.com/wesleysnt/finance-api/pkg"
 )
 
 func RegisterRoute(e *echo.Echo) {

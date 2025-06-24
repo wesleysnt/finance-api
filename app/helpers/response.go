@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/wesleysnt/go-base/app/schemas"
+	"github.com/wesleysnt/finance-api/app/schemas"
 )
 
 func CatchErrorResponseApi(r *schemas.ResponseApiError) *schemas.SetResponseApiError {
