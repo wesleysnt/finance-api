@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/wesleysnt/finance-api/app/facades"
+	"github.com/wesleysnt/finance-api/pkg"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -60,7 +60,7 @@ func ConnectDB(env Database) {
 
 	setPool(sqlDB)
 
-	facades.MakeOrm(dbInstance)
+	pkg.MakeOrm(dbInstance)
 }
 
 func setPool(sqlDB *sql.DB) {
