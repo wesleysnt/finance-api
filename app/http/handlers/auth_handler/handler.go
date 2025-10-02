@@ -12,9 +12,9 @@ type AuthHandler struct {
 	service services.AuthService
 }
 
-func NewAuthHandler() *AuthHandler {
+func NewAuthHandler(service services.AuthService) *AuthHandler {
 	return &AuthHandler{
-		service: *services.NewAuthService(),
+		service: service,
 	}
 }
 
@@ -22,13 +22,16 @@ func (h *AuthHandler) Login(c echo.Context) error {
 	requests := &requests.LoginRequest{}
 
 	if err := c.Bind(requests); err != nil {
-		return &schemas.ResponseApiError{
-			Status:  schemas.ApiErrorBadRequest,
-			Message: err.Error(),
-		}
+		return helpers.ResponseApiError(c, err.Error(), 400, nil)
 	}
 
-	resp, err := h.service.Login(requests)
+	if err := c.Validate(requests); err != nil {
+		respErr := err.(*schemas.ResponseApiError)
+		catchErr := helpers.CatchErrorResponseApi(respErr)
+
+		return helpers.ResponseApiError(c, catchErr.Message, catchErr.StatusCode, nil)
+	}
+	resp, err := h.service.Login(requests, c.Request().Context())
 
 	if err != nil {
 		respErr := err.(*schemas.ResponseApiError)

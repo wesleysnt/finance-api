@@ -3,11 +3,13 @@ package main
 import (
 	"os"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/wesleysnt/finance-api/app/config"
 	"github.com/wesleysnt/finance-api/app/helpers"
 	"github.com/wesleysnt/finance-api/app/routes"
 	"github.com/wesleysnt/finance-api/cmd/commands"
+	"github.com/wesleysnt/finance-api/pkg"
 )
 
 func main() {
@@ -20,7 +22,7 @@ func main() {
 	}
 
 	e := echo.New()
-
+	e.Validator = &pkg.CustomValidator{Validator: validator.New()}
 	routes.RegisterRoute(e)
 	e.RouteNotFound("/*", missingRouteHandler)
 	e.HideBanner = true
