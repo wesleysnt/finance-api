@@ -59,8 +59,8 @@ func (s *authService) Login(request *requests.LoginRequest, ctx context.Context)
 }
 
 func (s *authService) Register(request *requests.RegisterRequest, ctx context.Context) (*responses.RegisterResponse, error) {
-	existingUser, _ := s.userRepo.GetUserByEmail(request.Email, ctx)
-	if existingUser != nil {
+	_, err := s.userRepo.GetUserByEmail(request.Email, ctx)
+	if err == nil {
 		return nil, &schemas.ResponseApiError{
 			Status:  schemas.ApiErrorBadRequest,
 			Message: "Email already in use",
@@ -74,7 +74,7 @@ func (s *authService) Register(request *requests.RegisterRequest, ctx context.Co
 		Currency: request.Currency,
 	}
 
-	err := s.userRepo.CreateUser(user, ctx)
+	err = s.userRepo.CreateUser(user, ctx)
 	if err != nil {
 		return nil, &schemas.ResponseApiError{
 			Status:  schemas.ApiErrorInternalServer,

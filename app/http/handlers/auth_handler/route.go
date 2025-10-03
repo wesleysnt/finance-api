@@ -17,4 +17,5 @@ func Route(route *echo.Group) {
 	auth := route.Group("/auth")
 
 	auth.POST("/login", handler.Login)
+	auth.POST("/register", handler.Register)
 }

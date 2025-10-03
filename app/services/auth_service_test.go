@@ -79,3 +79,36 @@ func TestLogin(t *testing.T) {
 
 	repo.AssertExpectations(t)
 }
+
+func TestRegister(t *testing.T) {
+	repo := new(MockUserRepository)
+	jwt := new(MockJWTService)
+
+	service := NewAuthService(repo, jwt)
+
+	ctx := context.Background()
+
+	repo.On("GetUserByEmail", "newuser1@example.com", ctx).Return(&models.User{}, gorm.ErrRecordNotFound)
+
+	request := &requests.RegisterRequest{
+		Name:     "New User",
+		Email:    "newuser1@example.com",
+		Password: "newUser1Password",
+		Currency: "USD",
+	}
+
+	user := &models.User{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: &request.Password,
+		Currency: request.Currency,
+	}
+
+	repo.On("CreateUser", user, ctx).Return(nil)
+	jwt.On("GenerateToken", int(user.ID), "newuser1@example.com", "user").Return("mocked_jwt_token", nil)
+
+	response, err := service.Register(request, ctx)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, "mocked_jwt_token", response.Token)
+}
