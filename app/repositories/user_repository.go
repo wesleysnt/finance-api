@@ -4,22 +4,22 @@ import (
 	"context"
 
 	"github.com/wesleysnt/finance-api/app/http/models"
-	"github.com/wesleysnt/finance-api/pkg"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
 	// Define your methods here, e.g.:
 	GetUserByEmail(email string, ctx context.Context) (*models.User, error)
+	CreateUser(user *models.User, ctx context.Context) error
 }
 
 type userRepository struct {
 	orm *gorm.DB
 }
 
-func NewUserRepository() UserRepository {
+func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{
-		orm: pkg.Orm(),
+		orm: db,
 	}
 }
 func (r *userRepository) GetUserByEmail(email string, ctx context.Context) (*models.User, error) {
@@ -28,4 +28,11 @@ func (r *userRepository) GetUserByEmail(email string, ctx context.Context) (*mod
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userRepository) CreateUser(user *models.User, ctx context.Context) error {
+	if err := r.orm.WithContext(ctx).Create(user).Error; err != nil {
+		return err
+	}
+	return nil
 }

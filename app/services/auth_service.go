@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/wesleysnt/finance-api/app/http/models"
 	"github.com/wesleysnt/finance-api/app/http/requests"
 	"github.com/wesleysnt/finance-api/app/repositories"
 	"github.com/wesleysnt/finance-api/app/responses"
@@ -12,6 +13,7 @@ import (
 
 type AuthService interface {
 	Login(request *requests.LoginRequest, ctx context.Context) (*responses.LoginResponse, error)
+	Register(request *requests.RegisterRequest, ctx context.Context) (*responses.RegisterResponse, error)
 }
 
 type authService struct {
@@ -19,9 +21,9 @@ type authService struct {
 	userRepo repositories.UserRepository
 }
 
-func NewAuthService(userRepo repositories.UserRepository) AuthService {
+func NewAuthService(userRepo repositories.UserRepository, jwt auth.JWTService) AuthService {
 	return &authService{
-		jwt:      *auth.NewJWTService(),
+		jwt:      jwt,
 		userRepo: userRepo,
 	}
 }
@@ -54,4 +56,42 @@ func (s *authService) Login(request *requests.LoginRequest, ctx context.Context)
 	return &responses.LoginResponse{
 		Token: token,
 	}, nil
+}
+
+func (s *authService) Register(request *requests.RegisterRequest, ctx context.Context) (*responses.RegisterResponse, error) {
+	existingUser, _ := s.userRepo.GetUserByEmail(request.Email, ctx)
+	if existingUser != nil {
+		return nil, &schemas.ResponseApiError{
+			Status:  schemas.ApiErrorBadRequest,
+			Message: "Email already in use",
+		}
+	}
+
+	user := &models.User{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: &request.Password,
+		Currency: request.Currency,
+	}
+
+	err := s.userRepo.CreateUser(user, ctx)
+	if err != nil {
+		return nil, &schemas.ResponseApiError{
+			Status:  schemas.ApiErrorInternalServer,
+			Message: "Failed to create user",
+		}
+	}
+
+	token, err := s.jwt.GenerateToken(int(user.ID), user.Email, "user")
+	if err != nil {
+		return nil, &schemas.ResponseApiError{
+			Status:  schemas.ApiErrorInternalServer,
+			Message: "Failed to generate token",
+		}
+	}
+	return &responses.RegisterResponse{
+		Email: user.Email,
+		Token: token,
+	}, nil
+
 }
