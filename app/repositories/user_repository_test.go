@@ -17,6 +17,9 @@ func setupTestDB(t *testing.T) *gorm.DB {
 	err = db.AutoMigrate(&models.User{})
 	assert.NoError(t, err)
 
+	err = db.AutoMigrate(&models.Account{})
+	assert.NoError(t, err)
+
 	return db
 }
 
