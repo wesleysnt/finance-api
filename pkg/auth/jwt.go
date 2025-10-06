@@ -28,15 +28,6 @@ func NewJWTService() JWTService {
 		refreshExpiry: time.Duration(config.Conf.Jwt.Refresh) * time.Hour,
 	}
 }
-func NewJWTServiceWithConfig(secretKey, issuer string, tokenExpiry, refreshExpiry time.Duration) JWTService {
-	return &jwtService{
-		secretKey:     secretKey,
-		issuer:        issuer,
-		tokenExpiry:   tokenExpiry,
-		refreshExpiry: refreshExpiry,
-	}
-}
-
 func (j *jwtService) GenerateToken(userId int, email, role string) (string, error) {
 	claims := &Claims{
 		UserID: userId,
