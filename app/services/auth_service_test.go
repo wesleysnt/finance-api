@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/wesleysnt/finance-api/app/http/models"
 	"github.com/wesleysnt/finance-api/app/http/requests"
+	"github.com/wesleysnt/finance-api/app/schemas"
 	"github.com/wesleysnt/finance-api/pkg/auth"
 	"gorm.io/gorm"
 )
@@ -76,6 +77,43 @@ func TestLogin(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.NotEmpty(t, response.Token)
+
+	repo.AssertExpectations(t)
+}
+
+func TestAuthService_Login_userNotFoud(t *testing.T) {
+	repo := new(MockUserRepository)
+	jwt := new(MockJWTService)
+
+	service := NewAuthService(repo, jwt)
+
+	ctx := context.Background()
+
+	expectedPassword, err := auth.HashPassword("testPassword")
+
+	assert.NoError(t, err)
+
+	expectedUser := &models.User{
+		Model:    gorm.Model{ID: 1},
+		Email:    "testuser1@example.com",
+		Password: &expectedPassword, // Assume this is a hashed password
+		Currency: "USD",
+	}
+
+	repo.On("GetUserByEmail", "testuser@example.com", ctx).Return(&models.User{}, &schemas.ResponseApiError{
+		Status:  schemas.ApiErrorNotFound,
+		Message: "User not found",
+	})
+	jwt.On("GenerateToken", int(expectedUser.ID), expectedUser.Email, "user").Return("mocked_jwt_token", nil)
+
+	request := &requests.LoginRequest{
+		Email:    "testuser@example.com",
+		Password: "testPassword",
+	}
+
+	response, err := service.Login(request, ctx)
+	assert.Error(t, err)
+	assert.Nil(t, response)
 
 	repo.AssertExpectations(t)
 }
