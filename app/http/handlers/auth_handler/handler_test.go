@@ -62,3 +62,56 @@ func TestAuthHandler_Login(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 	service.AssertExpectations(t)
 }
+
+// FAIL TEST 1: Invalid JSON
+func TestAuthHandler_Login_InvalidJSON(t *testing.T) {
+	mockService := new(MockAuthService)
+	handler := NewAuthHandler(mockService)
+
+	// Invalid JSON
+	req := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer([]byte("invalid json")))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+	e := echo.New()
+	e.Validator = &pkg.CustomValidator{Validator: validator.New()}
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	err := handler.Login(c)
+
+	assert.NoError(t, err) // Handler handles error internally
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+	// Service should NOT be called
+	mockService.AssertNotCalled(t, "Login")
+}
+
+func TestAuthHandler_Login_ValidationError(t *testing.T) {
+	service := new(MockAuthService)
+	handler := NewAuthHandler(service)
+
+	request := requests.LoginRequest{
+		Email:    "",
+		Password: "password",
+	}
+
+	reqJson, _ := json.Marshal(request)
+	req := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(reqJson))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+	e := echo.New()
+	e.Validator = &pkg.CustomValidator{Validator: validator.New()}
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	err := handler.Login(c)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+
+	var response map[string]interface{}
+	json.Unmarshal(rec.Body.Bytes(), &response)
+
+	assert.Nil(t, response["data"])
+	assert.Contains(t, response["message"], "required")
+
+}
