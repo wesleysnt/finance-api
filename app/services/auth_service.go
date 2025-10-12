@@ -54,6 +54,7 @@ func (s *authService) Login(request *requests.LoginRequest, ctx context.Context)
 	}
 
 	return &responses.LoginResponse{
+		Email: request.Email,
 		Token: token,
 	}, nil
 }
