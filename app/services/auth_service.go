@@ -41,7 +41,7 @@ func (s *authService) Login(request *requests.LoginRequest, ctx context.Context)
 	if !auth.ComparePassword(request.Password, *user.Password) {
 		return nil, &schemas.ResponseApiError{
 			Status:  schemas.ApiErrorUnauthorized,
-			Message: "Invalid password",
+			Message: "Invalid credential",
 		}
 	}
 

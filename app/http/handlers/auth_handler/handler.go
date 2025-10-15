@@ -65,5 +65,5 @@ func (h *AuthHandler) Register(c echo.Context) error {
 		return helpers.ResponseApiError(c, catchErr.Message, catchErr.StatusCode, nil)
 	}
 
-	return helpers.ResponseApiOk(c, "oke", resp)
+	return helpers.ResponseApiCreated(c, "oke", resp)
 }
