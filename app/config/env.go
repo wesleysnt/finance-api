@@ -4,9 +4,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+var Conf *Env
+
 type Env struct {
 	Database Database `mapstructure:"database"`
 	Server   Server   `mapstructure:"server"`
+	Jwt      Jwt      `mapstructure"jwt"`
 }
 type Database struct {
 	Driver   string `mapstructure:"driver"`
@@ -21,21 +24,28 @@ type Server struct {
 	Host string `mapstructure:"host"`
 }
 
+type Jwt struct {
+	Secret  string `mapstructure:"secret"`
+	Expiry  uint   `mapStructure:"expiry"`
+	Refresh uint   `mapStrcuture:"refresh"`
+}
+
 func GetEnv() *Env {
-	env := &Env{}
-	v := viper.New()
-	v.SetConfigType("yaml")
-	v.SetConfigFile("./.yaml")
-	err := v.ReadInConfig()
+	if Conf == nil {
+		v := viper.New()
+		v.SetConfigType("yaml")
+		v.SetConfigFile("./.yaml")
+		err := v.ReadInConfig()
 
-	if err != nil {
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
+
+		err = v.Unmarshal(&Conf)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	err = v.Unmarshal(env)
-	if err != nil {
-		panic(err)
-	}
-
-	return env
+	return Conf
 }

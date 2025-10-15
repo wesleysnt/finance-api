@@ -29,6 +29,11 @@ func CatchErrorResponseApi(r *schemas.ResponseApiError) *schemas.SetResponseApiE
 			StatusCode: http.StatusUnprocessableEntity,
 			Message:    r.Message,
 		}
+	case schemas.ApiErrorUnauthorized:
+		return &schemas.SetResponseApiError{
+			StatusCode: http.StatusUnauthorized,
+			Message:    r.Message,
+		}
 	default:
 		return &schemas.SetResponseApiError{
 			StatusCode: http.StatusInternalServerError,

@@ -1,4 +1,4 @@
-package facades
+package pkg
 
 import "gorm.io/gorm"
 
