@@ -9,6 +9,7 @@ import (
 
 type AccountRepository interface {
 	CreateAccount(account *models.Account, ctx context.Context) error
+	GetAccountList(userId uint, ctx context.Context) ([]models.Account, error)
 }
 
 type accountRepository struct {
@@ -26,4 +27,14 @@ func (r accountRepository) CreateAccount(account *models.Account, ctx context.Co
 		return err
 	}
 	return nil
+}
+
+func (r accountRepository) GetAccountList(userId uint, ctx context.Context) ([]models.Account, error) {
+	var account []models.Account
+	err := r.orm.Where("user_id", userId).Find(&account)
+
+	if err.Error != nil {
+		return []models.Account{}, err.Error
+	}
+	return account, nil
 }
